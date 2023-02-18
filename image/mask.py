@@ -45,6 +45,3 @@ def crop(org: str | Path, mask: str | Path, reverse: bool=False,
         blended[gray_mask==255, 3] = 0
 
     return blended
-
-
-crop('org.jpg', 'mask.jpg', False, 'black')
