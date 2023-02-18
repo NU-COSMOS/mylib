@@ -19,8 +19,12 @@ def crop(org: str | Path, mask: str | Path, reverse: bool=False,
     Returns:
         np.ndarray: 切り抜いた画像. cv2.imwrite()で保存可能
     """
-    org = cv2.imread(str(org))
+    img = cv2.imread(str(org))
     gray_mask = cv2.imread(str(mask), cv2.IMREAD_GRAYSCALE)
+
+    if img.shape[1:] != gray_mask.shape:
+        print(f'画像の縦・横サイズが違います. org: {img.shape}, mask: {gray_mask.shape}')
+        exit(1)
 
     # マスク画像を白と黒に二値化する
     _, gray_mask = cv2.threshold(gray_mask, 128, 255, cv2.THRESH_OTSU)
@@ -33,7 +37,7 @@ def crop(org: str | Path, mask: str | Path, reverse: bool=False,
     mask = cv2.cvtColor(gray_mask, cv2.COLOR_GRAY2BGR)
 
     # 切り抜き画像を生成
-    blended = cv2.addWeighted(src1=org, alpha=1, src2=mask, beta=1, gamma=0)
+    blended = cv2.addWeighted(src1=img, alpha=1, src2=mask, beta=1, gamma=0)
 
     # 切り抜き部分以外は黒で塗りつぶす
     if fill == 'black':
