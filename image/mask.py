@@ -4,14 +4,14 @@ from typing import Literal
 import numpy as np
 
 
-def crop(org: str | Path, mask: str | Path, reverse: bool=False,
+def crop(src: str | Path, mask: str | Path, reverse: bool=False,
          fill: Literal['white', 'black', 'clear'] = 'white') -> np.ndarray:
     """
     画像をマスクで切り抜く.
-    切り抜きたい画像から、マスク画像の黒部分を切り抜く. 
+    defaultでは、 maskの黒い部分がsrcに置き換わる
 
     Args:
-        org (str | Path): 切り抜きたい画像のパス
+        src (str | Path): 切り抜きたい画像のパス
         mask (str | Path): 切り抜きに使いたいマスク画像
         reverse (bool): マスク画像の白黒を反転させるかどうか. Trueのとき反転させる
         fill (Literal['white', 'black', 'clear']): 切り抜き部分以外の塗りつぶし方法
@@ -19,10 +19,10 @@ def crop(org: str | Path, mask: str | Path, reverse: bool=False,
     Returns:
         np.ndarray: 切り抜いた画像. cv2.imwrite()で保存可能
     """
-    img = cv2.imread(str(org))
+    img = cv2.imread(str(src))
     gray_mask = cv2.imread(str(mask), cv2.IMREAD_GRAYSCALE)
 
-    if img.shape[1:] != gray_mask.shape:
+    if img.shape[:2] != gray_mask.shape:
         print(f'画像の縦・横サイズが違います. org: {img.shape}, mask: {gray_mask.shape}')
         exit(1)
 
