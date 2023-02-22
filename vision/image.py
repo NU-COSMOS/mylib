@@ -71,7 +71,6 @@ def keystone_correction(src: str | Path,
     Returns:
         cv2.Mat: 台形補正した画像. cv2.imwrite()で保存可能
     """
-    # 変換前4点の座標　p1:左上　p2:右上 p3:左下 p4:左下
     p1 = np.array(p1)
     p2 = np.array(p2)
     p3 = np.array(p3)
