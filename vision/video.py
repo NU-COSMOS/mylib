@@ -4,7 +4,7 @@ from pathlib import Path
 
 def save_all_frames(video_path: str | Path,
                     dir_path: str | Path,
-                    ext: str='png'):
+                    ext: str='png') -> None:
     """
     指定した動画の全フレームをディレクトリに格納する
 
@@ -25,7 +25,7 @@ def save_all_frames(video_path: str | Path,
     while True:
         ret, frame = cap.read()
         if ret:
-            cv2.imwrite(dir_path / f'{n:.07f}.{ext}', frame)
+            cv2.imwrite(str(dir_path / f'{n:.07f}.{ext}'), frame)
             n += 1
         else:
             return
