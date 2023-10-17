@@ -21,6 +21,7 @@ def seg_iou(y: np.ndarray[np.ndarray[int] | int],
             label: int) -> float:
     """
     セグメンテーションタスクにおけるIoUを計算する
+    
     Args:
         y (np.ndarray[np.ndarray[int] | int]): 推論結果の二次元or一次元配列.
         t (np.ndarray[np.ndarray[int] | int]): 正解ラベルの二次元or一次元配列.
