@@ -14,4 +14,5 @@ def instances_to_semantic(masks: list[np.ndarray]) -> np.ndarray:
          [0, 1, 1, 0]   [0, 0, 0, 0]   [0, 0, 0, 1]          [0, 1, 1, 1] 
          [0, 1, 1, 0]]  [0, 0, 0, 0]]  [0, 0, 0, 0]]         [0, 1, 1, 0]]
     """
+    masks = list(map())
     return np.where(np.sum(masks, axis=0) > 0, 1, 0)
