@@ -16,9 +16,11 @@ def rectangular_graph(arr: np.ndarray, is_rate: bool=True):
 
     """
 
-def iou(y: np.ndarray[np.ndarray[int] | int], t: np.ndarray[np.ndarray[int] | int], label: int) -> float:
+def seg_iou(y: np.ndarray[np.ndarray[int] | int],
+            t: np.ndarray[np.ndarray[int] | int],
+            label: int) -> float:
     """
-    IoUを計算する
+    セグメンテーションタスクにおけるIoUを計算する
     Args:
         y (np.ndarray[np.ndarray[int] | int]): 推論結果の二次元or一次元配列.
         t (np.ndarray[np.ndarray[int] | int]): 正解ラベルの二次元or一次元配列.
@@ -55,20 +57,23 @@ def iou(y: np.ndarray[np.ndarray[int] | int], t: np.ndarray[np.ndarray[int] | in
     return iou
 
 
-def mean_iou(y: np.ndarray[np.ndarray[int] | int], t: np.ndarray[np.ndarray[int] | int]) -> float:
+def mean_seg_iou(y: np.ndarray[np.ndarray[int] | int],
+                 t: np.ndarray[np.ndarray[int] | int],
+                 labels: list[int]=None) -> float:
     """
-    mIoUを計算する.
+    セグメンテーションタスクにおけるmIoUを計算する.
 
     Args:
         y (np.ndarray[np.ndarray[int] | int]): 推論結果の二次元or一次元配列.
         t (np.ndarray[np.ndarray[int] | int]): 正解ラベルの二次元or一次元配列. 
+        labels (list[int]): 計算するクラスラベル.
 
     Returns:
         float: mIoU
 
     ex. 
         [[0, 0, 1],     [[0, 1, 1],
-    y =  [1, 0, 2],  t = [1, 2, 2],  return (1/4 + 2/3 + 3/5) / 3
+    y =  [1, 0, 2],  t = [1, 2, 2],  labels = [0, 1, 2]  return (1/4 + 2/3 + 3/5) / 3
          [0, 2, 2]]      [2, 2, 2]]
     """
     if y.shape != t.shape:
@@ -81,11 +86,12 @@ def mean_iou(y: np.ndarray[np.ndarray[int] | int], t: np.ndarray[np.ndarray[int]
         y = y.flatten()
         t = t.flatten()
     
-    labels = list(set(np.concatenate([y, t])))
+    if labels is None:
+        labels = list(set(np.concatenate([y, t])))
 
     # クラスラベルごとのIoUを計算して記録
     ious = []
     for label in labels:
-        ious.append(iou(y, t, label))
+        ious.append(seg_iou(y, t, label))
 
     return np.mean(ious)
