@@ -111,3 +111,39 @@ def keystone_correction(src: str | Path,
 
     return output
 
+
+def label_to_color_img(label_map: np.ndarray,
+                       translate: dict[int, np.ndarray[int]]) -> np.ndarray[np.ndarray[np.ndarray[np.uint8]]]:
+    """
+    ラベルマップをカラー画像に変換する
+    cv2.imwrite(hoge, label_to_color_img(fuga))で出力可能
+
+    Args:
+        label (np.ndarray): ラベルマップ
+        translate (dict[int, np.ndarray[int]]): どのラベルを何色に変換するか
+
+    Returns:
+        np.ndarray[np.ndarray[np.ndarray[np.uint8]]]: カラー画像
+
+    ex. 
+           [[0, 1, 2],
+    label = [1, 2, 2],  translate = {0: [0, 0, 255], 1: [255, 255, 255], 2: [0, 255, 0]}
+            [1, 0, 0]]
+
+           [[赤, 白, 緑]
+    return  [白, 緑, 緑]
+            [白, 赤, 赤]]
+    """
+    if len(label_map.shape) != 2:
+        raise ValueError('ラベルマップは二次元配列にしてください')
+    
+    color_img = np.zeros((label_map.shape[0], label_map.shape[1], 3))
+
+    # ラベルマップに存在するラベル一覧を取得
+    labels = list(set(label_map.flatten()))
+
+    # 各ラベルに対応する色でカラー画像を埋めていく
+    for label in labels:
+        color_img[label_map == label] = translate[label]
+
+    return color_img.astype(np.uint8)
