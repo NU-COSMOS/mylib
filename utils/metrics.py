@@ -96,3 +96,30 @@ def mean_seg_iou(y: np.ndarray[np.ndarray[int] | int],
         ious.append(seg_iou(y, t, label))
 
     return np.mean(ious)
+
+
+def calc_diff_rate(arr1: np.ndarray | list, arr2: np.ndarray | list) -> float:
+    """
+    二つの配列の差分割合を求める
+    calc_diff_rate([0, 1, 1, 0], [1, 1, 1, 0]) == 0.25
+
+    Args:
+        arr1(np.ndarray | list): array1
+        arr2(np.ndarray | list): array2
+
+    Returns:
+        float: 差分割合(0 ~ 1)
+    """
+    try:
+        arr1 = np.array(arr1)
+        arr2 = np.array(arr2)
+    except:
+        raise ValueError(f"Input arrays must be np.ndarray or list. arr1: {type(arr1)}, arr2: {type(arr2)}")
+    
+    if arr1.shape != arr2.shape:
+        raise ValueError(f"Input arrays must have the same shape. arr1.shape: {arr1.shape}, arr2.shape: {arr2.shape}")
+
+    # 差分配列を作成
+    diff: np.ndarray = np.abs(arr1 - arr2)
+
+    return diff[diff != 0].size / diff.size
